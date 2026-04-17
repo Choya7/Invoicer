@@ -1,0 +1,12 @@
+{
+  "name": "invoicer-root",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix html\" \"node backend/index.js\"",
+    "backend": "node backend/index.js",
+    "frontend": "npm run dev --prefix html"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

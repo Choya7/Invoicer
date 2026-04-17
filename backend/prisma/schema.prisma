@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Invoice {
+  id          String        @id
+  issueDate   DateTime
+  clientName  String
+  supplier    String        // SQLite doesn't support Json, stored as stringified JSON
+  footer      String        // SQLite doesn't support Json, stored as stringified JSON
+  grandTotal  Float         @map("grand_total")
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+  items       InvoiceItem[]
+
+  @@map("invoices")
+}
+
+model InvoiceItem {
+  id        Int      @id @default(autoincrement())
+  invoiceId String   @map("invoice_id")
+  invoice   Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  date      String?
+  code      String?
+  name      String
+  spec      String?
+  qty       Float?
+  price     Float?
+  supply    Float?
+  tax       Float?
+  note      String?
+
+  @@map("invoice_items")
+}
+
+model Client {
+  id      Int      @id @default(autoincrement())
+  name    String   @unique
+  bizNo   String?  @map("biz_no")
+  owner   String?
+  memo    String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("clients")
+}
+
+model ItemMaster {
+  id     Int     @id @default(autoincrement())
+  code   String  @unique
+  name   String
+  spec   String?
+  price  Float?
+
+  @@map("item_master")
+}

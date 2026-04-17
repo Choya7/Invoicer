@@ -1,4 +1,39 @@
+# Environments
+.env
+.env.local
+.env.*.local
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Python
 venv/
 __pycache__/
 *.pyc
-.env
+
+# Local databases
+*.db
+*.db-journal
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+
+# IDE files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Prisma
+/prisma-client/
+
+# OS files
+.DS_Store
+Thumbs.db
