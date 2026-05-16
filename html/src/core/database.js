@@ -1,4 +1,6 @@
-const API_BASE_URL = `http://${window.location.hostname}:5000/api`;
+const API_BASE_URL = import.meta.env.PROD
+  ? '/api' 
+  : `http://${window.location.hostname}:5000/api`;
 
 const handleResponse = async (response) => {
   if (response.status === 401 || response.status === 403) {
