@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Outlet, NavLink, useLocation } from 'react-router-dom';
-import { FileText, List, Settings, Menu, X } from 'lucide-react';
+import { FileText, List, Settings, Menu, X, LogOut, ClipboardList, ShoppingCart, Package } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Layout() {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -36,6 +37,9 @@ export default function Layout() {
         </div>
         
         <nav style={{ padding: '1rem', flex: 1, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <div style={{ margin: '0 0 0.5rem 1rem', fontSize: '0.7rem', fontWeight: 'bold', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            명세서 관리
+          </div>
           <NavLink 
             to="/input" 
             className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
@@ -48,8 +52,49 @@ export default function Layout() {
           >
             <List size={20} /> 거래명세서 목록 조회
           </NavLink>
+
+          <div style={{ margin: '1rem 0 0.5rem 1rem', fontSize: '0.7rem', fontWeight: 'bold', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            발주 관리
+          </div>
+
+          <NavLink 
+            to="/purchase-order/input" 
+            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+          >
+            <ShoppingCart size={20} /> 발주서 작성
+          </NavLink>
+          <NavLink 
+            to="/purchase-order/status" 
+            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+          >
+            <ClipboardList size={20} /> 발주현황
+          </NavLink>
+
+          <div style={{ margin: '1rem 0 0.5rem 1rem', fontSize: '0.7rem', fontWeight: 'bold', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            재고 관리
+          </div>
+          <NavLink 
+            to="/fabrics" 
+            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+          >
+            <Package size={20} /> 원단 관리
+          </NavLink>
         </nav>
 
+
+        <div style={{ padding: '0 1rem 1rem 1rem' }}>
+          <button 
+            onClick={() => {
+              localStorage.removeItem('token');
+              localStorage.removeItem('user');
+              window.location.href = '/login';
+            }}
+            className="nav-link w-full text-left" 
+            style={{ border: 'none', background: 'transparent', cursor: 'pointer', width: '100%' }}
+          >
+            <LogOut size={20} /> 로그아웃
+          </button>
+        </div>
 
         <div style={{ padding: '1.5rem', borderTop: '1px solid #1e293b', fontSize: '0.75rem', color: '#64748b' }}>
           Invoicer Revamp &copy; 2026
