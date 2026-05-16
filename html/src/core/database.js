@@ -115,6 +115,15 @@ export const updateClient = async (id, name, biz_no, owner, memo) => {
   return handleResponse(res);
 };
 
+export const deleteClients = async (ids) => {
+  const res = await authenticatedFetch(`${API_BASE_URL}/clients`, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ids })
+  });
+  return handleResponse(res);
+};
+
 // Items
 export const getAllItems = async () => {
   const res = await authenticatedFetch(`${API_BASE_URL}/items`);

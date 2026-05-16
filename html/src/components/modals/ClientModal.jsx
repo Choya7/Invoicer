@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Search, X, Plus } from 'lucide-react';
-import { getAllClients, addClient } from '../../core/database';
+import { Search, X, Plus, Trash2 } from 'lucide-react';
+import { getAllClients, addClient, deleteClients } from '../../core/database';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
@@ -62,6 +62,30 @@ export default function ClientModal({ isOpen, onClose, onSelect }) {
     }
   };
 
+  const handleDelete = async (e, id, name) => {
+    e.stopPropagation();
+    const result = await MySwal.fire({
+      title: '삭제 확인',
+      text: `'${name}' 거래처를 삭제하시겠습니까? 관련 데이터에 영향이 있을 수 있습니다.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: '삭제',
+      cancelButtonText: '취소'
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await deleteClients([id]);
+        MySwal.fire('삭제 완료', '삭제되었습니다.', 'success');
+        loadClients();
+      } catch (error) {
+        MySwal.fire('삭제 실패', error.message || '오류가 발생했습니다.', 'error');
+      }
+    }
+  };
+
   const filtered = clients.filter(c => 
     c.name.includes(search) || 
     c.biz_no.includes(search) || 
@@ -113,6 +137,7 @@ export default function ClientModal({ isOpen, onClose, onSelect }) {
                   <th>사업자번호</th>
                   <th>성명</th>
                   <th>메모</th>
+                  <th style={{ width: '60px', textAlign: 'center' }}>삭제</th>
                 </tr>
               </thead>
               <tbody>
@@ -126,11 +151,21 @@ export default function ClientModal({ isOpen, onClose, onSelect }) {
                     <td>{c.biz_no}</td>
                     <td>{c.owner}</td>
                     <td className="text-muted">{c.memo}</td>
+                    <td style={{ textAlign: 'center' }}>
+                      <button 
+                        onClick={(e) => handleDelete(e, c.id, c.name)}
+                        className="btn-icon"
+                        style={{ color: 'var(--color-danger)', background: 'none', border: 'none', padding: '4px', cursor: 'pointer' }}
+                        title="삭제"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </td>
                   </tr>
                 ))}
                 {filtered.length === 0 && (
                   <tr>
-                    <td colSpan={4} className="text-center p-6 text-muted">등록된 매출처가 없습니다.</td>
+                    <td colSpan={5} className="text-center p-6 text-muted">등록된 매출처가 없습니다.</td>
                   </tr>
                 )}
               </tbody>

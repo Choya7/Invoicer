@@ -121,8 +121,8 @@ app.post('/api/login', loginLimiter, async (req, res, next) => {
   }
 });
 
-// Protected Routes - Apply middleware to all routes below
-app.use(authenticateToken);
+// Protected Routes - Apply middleware to all /api routes below
+app.use('/api', authenticateToken);
 
 // Invoices
 app.get('/api/invoices', async (req, res) => {
@@ -263,6 +263,17 @@ app.put('/api/clients/:id', async (req, res) => {
   }
 });
 
+app.delete('/api/clients', async (req, res, next) => {
+  const { ids } = req.body;
+  try {
+    await prisma.client.deleteMany({
+      where: { id: { in: ids } }
+    });
+    res.json({ message: 'Deleted successfully' });
+  } catch (error) {
+    next(error);
+  }
+});
 // Items
 app.get('/api/items', async (req, res) => {
   try {
